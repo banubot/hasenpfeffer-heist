@@ -14,6 +14,7 @@ export default function CharSelect(props) {
       Choose your character...
       </h2>
     {characters}
+    <br />
     <button id="submit">
       Start!
     </button>

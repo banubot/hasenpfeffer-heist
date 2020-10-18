@@ -1,6 +1,6 @@
 {
-  "short_name": "Hasenpfeffer Heist",
-  "name": "A game of rabbit thieves",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",
