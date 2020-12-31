@@ -1,5 +1,6 @@
 import React from 'react';
 import CharSelect from './CharSelect';
+import GameSelect from './GameSelect';
 
 export default function Start(props) {
 
@@ -11,7 +12,7 @@ export default function Start(props) {
       <p id="gameDes">
         Become the chubbiest bunny in the meadow when you face off against the other buns to steal the most from the garden - but don't get caught!
       </p>
-      <CharSelect />
+      <GameSelect />
     </center>
   </div>
 

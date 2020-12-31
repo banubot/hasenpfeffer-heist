@@ -11,3 +11,10 @@ export const reduce = pts => {
     payload: pts
   };
 };
+
+export const newlog = evt => {
+  return {
+    type: 'NEWLOG',
+    payload: evt
+  };
+};
