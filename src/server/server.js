@@ -10,15 +10,28 @@ io.on('connection', client => {
   function handleNewGame() {
     let roomCode = newRoomCode();
     clientRooms[client.id] = roomCode;
-    client.emit('gameCode', roomCode);
     state[roomCode] = createGameState();
-    client.join(roomCode);
-    client.number = 1;
-    client.emit("init", 1);
+    joinRoom(roomCode, 1);
   }
 
-  function handleJoinGame() {
+  function handleJoinGame(code) {
+    const room = io.sockets.adapter.rooms[code];
+    let users;
+    if (room) {
+      users = room.sockets;
+    }
 
+    let numClients = 0;
+    if (users) {
+      numClients = Object.keys(users).length;
+    }
+
+    if (numClients === 0) {
+      client.emit("unknownRoom");
+      return;
+    }
+
+    joinRoom(code, numClients + 1);
   }
 
   function newRoomCode() {
@@ -26,6 +39,14 @@ io.on('connection', client => {
     //todo: no duplicates
     return breeds[Math.floor(Math.random() * breeds.length)];
 
+  }
+
+  function joinRoom(code, clientNum) {
+    client.emit('gameCode', code);
+    clientRooms[client.id] = code;
+    client.join(code);
+    client.number = clientNum;
+    client.emit("init", clientNum);
   }
 
   function createGameState() {
