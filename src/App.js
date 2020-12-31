@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Start from './components/Start';
 import Game from './components/Game'
 import { useSelector, useDispatch } from 'react-redux'
 import { add, reduce } from './actions'
@@ -28,8 +27,6 @@ function App() {
 
   return (
     <div className="App">
-
-      <Start />
       <Game />
     </div>
   );
