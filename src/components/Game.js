@@ -3,7 +3,6 @@ import io from 'socket.io-client';
 
 
 export default function Game() {
-
   let playerNum;
   let rabbitPicName;
   let faveVeg;
@@ -30,6 +29,7 @@ export default function Game() {
     if (gameState.isPlaying) {
       document.getElementById("gameMain").style.display = "block";
       document.getElementById("intro").style.display = "none";
+      document.getElementById("title").classList.add("playingTitle");
     } else {
       document.getElementById("gameMain").style.display = "none";
       document.getElementById("intro").style.display = "block";
@@ -38,8 +38,7 @@ export default function Game() {
 
   return (
     <center>
-      {JSON.stringify(gameState)}
-      <h1 id="title">
+      <h1 className="startTitle" id="title">
         Hasenpfeffer HEIST!
       </h1>
       <GameIntro />
@@ -55,12 +54,65 @@ export default function Game() {
   function GameMain() {
     return (
       <div id="gameMain" >
-        <p>
-          Room Code: {gameState.room}
+        <img id="garden" src="../land2.png" alt="garden" />
+        <p id="roomCode">
+          <b>
+            Room Code:
+          </b>
+          {" Brown Chestnut of Lorraine" + gameState.room}
         </p>
-        {Object.values(gameState.players).map((player) =>
-          <img className="charPic" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
-        )}
+        <div id="players">
+          {Object.values(gameState.players).map((player) =>
+            <div>
+              <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
+              <p className="playerName">
+                {player.name}
+              </p>
+            </div>
+          )}
+        </div>
+        <div id="inventory">
+          <div id="actions">
+            <b className="inventoryHeader">
+              Actions
+            </b>
+            <p className="action">
+              Swipe
+            </p>
+            <p className="action">
+              Stash
+            </p>
+            <p className="action">
+              Dig
+            </p>
+            <p className="action">
+              Block
+            </p>
+            <p className="action">
+              End Turn
+            </p>
+          </div>
+          <div id="paws">
+            <b className="inventoryHeader">
+              Paws
+            </b>
+            <br />
+            <img className="stashItem" src={"../vegetables/tomato.png"} />
+            <img className="stashItem" src={"../vegetables/tomato.png"} />
+
+          </div>
+          <div id="burrow">
+            <b className="inventoryHeader">
+              Burrow
+            </b>
+            <br />
+            <img className="stashItem" src={"../vegetables/tomato.png"} />
+            <img className="stashItem" src={"../vegetables/tomato.png"} />
+            <img className="stashItem" src={"../vegetables/tomato.png"} />
+            <img className="stashItem" src={"../vegetables/tomato.png"} />
+
+          </div>
+        </div>
       </div>
     );
   }
@@ -120,19 +172,6 @@ export default function Game() {
 
   function handleNewPlayer(newPlayerName) {
     console.log(newPlayerName + " joined the game");
-    // console.log("got state " + newState);
-    // newState = JSON.parse(newState);
-    // setGameState(newState);
-
-    // // console.log(gameState)
-    // let i;
-    // for (i = 0; i < newState.players.length; i++) {
-    //   players.push(
-    //     <img className="charPic" id="playerRabbitImg" src={"../rabbits/" + gameState.players[i].rabbitImg + ".png"} alt="rabbit" />
-    //   )
-    // }
-    // console.log(gameState)
-
   }
 
   function CharSelect() {

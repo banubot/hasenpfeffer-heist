@@ -8,6 +8,21 @@
   margin-bottom: 5vw;
 }
 
+#inventory {
+  padding-top: 2vh;
+
+  border: 1px solid black;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  width: 20vw;
+  top: 20vw;
+}
+
+.inventoryHeader, .action {
+  font-family: "Description";
+  font-size: 3.5vw;
+}
+
 .charDiv {
   display: inline-block;
   margin: 0.5vw;
@@ -20,9 +35,34 @@
 }
 
 .charPic {
- 
-    max-width: 15vw;
-    max-height: 15vw;
+  max-width: 15vw;
+  max-height: 15vw;
+}
+
+.playersPicMain {
+  max-width: 15vw;
+  max-height: 15vw;
+}
+
+#players {
+  position: absolute;
+  width: 20vw;
+  top: 20vw;
+  left: 80vw;
+}
+
+#garden {
+  position: absolute;
+  width: 100vw;
+  top: 70vh;
+  left: 0;
+  height: 30vh;
+  z-index: 0;
+}
+
+.stashItem {
+  max-width: 10vw;
+  max-height: 10vw;
 }
 
 .charName {
@@ -31,16 +71,19 @@
     font-family: "Header";
 }
 
-.charDes, .charFave {
-    font-size: 2.5vw;
-    margin: 0;
-    font-family: "Description";
-}
 
-#title {
+.startTitle {
   font-family: "Title";
   font-size: 8.5vw;
   text-shadow: 2px 2px 5px green;
+}
+
+.playingTitle {
+  font-size: 7vw;
+  position: absolute;
+  left: 2vw;
+  top: 2vh;
+  margin: 0;
 }
 
 .selectTag {
@@ -52,6 +95,23 @@
   font-family: "Description";
   font-size: 4vw;
   margin: 1.5vw;
+}
+
+.playerName {
+  font-family: "Description";
+  margin: 0;
+}
+
+#roomCode {
+  position: absolute;
+  top: 10vw;
+  left: 55vw;
+  font-family: "Description";
+  font-size: 3vw;
+}
+
+.action:hover {
+  text-shadow: 2px 2px 5px green;
 }
 
 body {
