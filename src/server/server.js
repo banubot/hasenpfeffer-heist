@@ -10,7 +10,7 @@ io.on('connection', client => {
   function handleNewGame(playerName, faveVeg, rabbitImg) {
     let roomCode = newRoomCode();
     clientRooms[client.id] = roomCode;
-    state[roomCode] = createGameState();
+    state[roomCode] = createGameState(roomCode);
     joinRoom(roomCode, 1, playerName, faveVeg, rabbitImg);
   }
 
@@ -30,7 +30,7 @@ io.on('connection', client => {
       client.emit("unknownRoom");
       return;
     }
-
+    console.log("num clients is " + numClients)
     joinRoom(code, numClients + 1, playerName, faveVeg, rabbitImg);
   }
 
@@ -47,23 +47,24 @@ io.on('connection', client => {
     client.join(code);
     client.number = clientNum;
     addNewPlayer(code, clientNum, playerName, faveVeg, rabbitImg)
-    emitGameState(code, state[code]);
   }
 
   function addNewPlayer(code, clientNum, playerName, faveVeg, rabbitImg) {
     state[code].players[clientNum] = (new Player(clientNum, playerName, faveVeg, rabbitImg))
-    io.sockets.in(code).emit("newPlayer", playerName);
+    emitGameState(code, state[code]);
+    io.sockets.in(code).emit("newPlayer", playerName); //, JSON.stringify(state[code]));
   }
 
   function emitGameState(room, roomState) {
     io.sockets.in(room).emit("gameState", JSON.stringify(roomState));
   }
 
-  function createGameState() {
+  function createGameState(roomCode) {
     return {
-      isPlaying: true,
-      strikes: 0,
-      players: {},
+      "room": roomCode,
+      "isPlaying": true,
+      "strikes": 0,
+      "players": {},
     };
   }
 });
