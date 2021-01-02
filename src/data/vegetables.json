@@ -1,0 +1,77 @@
+[
+  {
+    "name": "a bok choy",
+    "vegImg": "bokchoy.png",
+    "points": 1
+  },
+  {
+    "name": "a cabbage",
+    "vegImg": "cabbage.png",
+    "points": 2
+  },
+  {
+    "name": "some carrots",
+    "vegImg": "carrots.png",
+    "points": 3
+  },
+  {
+    "name": "some celery",
+    "vegImg": "celery.png",
+    "points": 1
+  },
+  {
+    "name": "some lettuce",
+    "vegImg": "lettuce.png",
+    "points": 2
+  },
+  {
+    "name": "some mushrooms",
+    "vegImg": "mushrooms.png",
+    "points": 3
+  },
+  {
+    "name": "an onion",
+    "vegImg": "onion.png",
+    "points": 1
+  },
+  {
+    "name": "a potato",
+    "vegImg": "potato.png",
+    "points": 2
+  },
+  {
+    "name": "some radishes",
+    "vegImg": "radishes.png",
+    "points": 3
+  },
+  {
+    "name": "a tomato",
+    "vegImg": "tomato.png",
+    "points": 1
+  },
+  {
+    "name": "a cucumber",
+    "vegImg": "cucumber.png",
+    "points": 2
+  },
+  {
+    "name": "some broccoli",
+    "vegImg": "broccoli.png",
+    "points": 3
+  },
+  {
+    "name": "a cauliflower",
+    "vegImg": "cauliflower.png",
+    "points": 1
+  },
+  {
+    "name": "a corn",
+    "vegImg": "corn.png",
+    "points": 2
+  },
+  {
+    "name": "a bell pepper",
+    "vegImg": "bellpepper.png",
+    "points": 3
+  }
+]

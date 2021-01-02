@@ -1,4 +1,4 @@
-#charSelect {
+.startSelect {
   border: 1px solid black;
   background-color: rgba(255, 255, 255, 0.5);
   position: relative;
@@ -43,7 +43,7 @@
   text-shadow: 2px 2px 5px green;
 }
 
-#selectTag {
+.selectTag {
   font-family: "Header";
   font-size: 4vw;
 }

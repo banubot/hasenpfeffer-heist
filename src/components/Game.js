@@ -2,11 +2,19 @@ import React from 'react';
 import io from 'socket.io-client';
 
 let playerNum;
-let rabbitNum;
+let rabbitPicName;
+let faveVeg;
+let playerName;
+///let state = l;
+//socket.emit('log', message);
 
+const allVegs = require('../data/vegetables.json');
 const socket = io('http://localhost:3000');
-socket.on('init', handleInit);
-socket.on('gameCode', handleGameCode);
+
+socket.on('playerNum', handlePlayerNum); //get which player you are
+socket.on('gameCode', handleGameCode); //get code when new room made
+socket.on('newPlayer', handleNewPlayer);
+//socket.on('newOpponent', handleNewOpponent); 
 
 export default function Game() {
   return (
@@ -16,8 +24,9 @@ export default function Game() {
       </h1>
       <GameIntro />
       <div id="gameSelect">
-        <CharSelect />
         <RoomSelect />
+        <CharSelect />
+        <FaveVegSelect />
       </div>
       <GameMain />
     </center>
@@ -44,7 +53,8 @@ function GameIntro() {
       <p id="gameDes">
         Become the chubbiest bunny in the meadow when you face off against the other buns to steal the most from the garden - but don't get caught!
       </p>
-      <button onClick={startSelect}>Start</button>
+      <input type="select" id="nameInput" placeholder="Your name" />
+      <button onClick={handleStart}>Start</button>
     </center>
   );
 }
@@ -64,32 +74,29 @@ function RoomSelect() {
   );
 }
 
-function startSelect() {
+function handleStart() {
+  playerName = document.getElementById("nameInput").value;
   document.getElementById("intro").style.display = "none";
-  document.getElementById("roomSelect").style.display = "block";
+  document.getElementById("charSelect").style.display = "block";
 }
 
 function newGame() {
-  console.log("starting?")
-
-  socket.emit('newGame');
+  socket.emit('newGame', playerName, faveVeg, rabbitPicName);
   init();
 }
 
 function init() {
   document.getElementById("roomSelect").style.display = "none";
-  document.getElementById("charSelect").style.display = "block";
+  document.getElementById("gameMain").style.display = "block";
 }
 
 function joinGame() {
-  console.log("starting?")
-
   const code = document.getElementById("codeInput").value;
-  socket.emit('joinGame', code);
+  socket.emit('joinGame', code, playerName, faveVeg, rabbitPicName);
   init();
 }
 
-function handleInit(clientNum) {
+function handlePlayerNum(clientNum) {
   playerNum = clientNum;
   console.log("player is " + playerNum);
 }
@@ -99,17 +106,21 @@ function handleGameCode(code) {
   console.log("code is " + code);
 }
 
+function handleNewPlayer(newPlayerName) {
+  console.log(newPlayerName + " joined the game")
+}
+
 function CharSelect() {
   let characters = [];
   let i;
   for (i = 0; i < 15; i++) {
     characters.push(<div className="charDiv">
-      <img onClick={handleSelectCharacter} className="charPic" id={"rabbit" + i} src={"../rabbit" + i + ".png"} alt="rabbit" />
+      <img onClick={handleSelectCharacter} className="charPic" id={"rabbit" + i} src={"../rabbits/rabbit" + i + ".png"} alt="rabbit" />
     </div>);
   }
   return (
-    <div id="charSelect" style={{ display: "none" }}>
-      <h2 id="selectTag">
+    <div className="startSelect" id="charSelect" style={{ display: "none" }}>
+      <h2 className="selectTag">
         Choose your character...
         </h2>
       {characters}
@@ -117,9 +128,33 @@ function CharSelect() {
   );
 }
 
+function FaveVegSelect() {
+  let vegs = [];
+  let i;
+  for (i = 0; i < 15; i++) {
+    vegs.push(<div className="charDiv">
+      <img onClick={handleSelectFaveVeg} className="charPic" id={allVegs[i].name} src={"../vegetables/" + allVegs[i].vegImg} alt={allVegs[i].name} />
+    </div>);
+  }
+  return (
+    <div className="startSelect" id="vegSelect" style={{ display: "none" }}>
+      <h2 className="selectTag">
+        Choose your favourite vegetable...
+        </h2>
+      {vegs}
+    </div>
+  );
+}
+
+function handleSelectFaveVeg(e) {
+  faveVeg = e.target.id;
+  document.getElementById("vegSelect").style.display = "none";
+  document.getElementById("roomSelect").style.display = "block";
+}
+
 function handleSelectCharacter(e) {
-  let rabbitPicName = e.target.id;
-  document.getElementById("playerRabbitImg").src = "../" + rabbitPicName + ".png";
+  rabbitPicName = e.target.id;
+  document.getElementById("playerRabbitImg").src = "../rabbits/" + rabbitPicName + ".png";
   document.getElementById("charSelect").style.display = "none";
-  document.getElementById("gameMain").style.display = "block";
+  document.getElementById("vegSelect").style.display = "block";
 }
