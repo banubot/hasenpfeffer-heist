@@ -110,6 +110,35 @@
   font-size: 3vw;
 }
 
+#chatbox {
+  position: relative;
+  width: 52vw;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 60vh;
+  top: 20vw;
+  left: 2vw;
+  overflow-y: scroll;
+}
+
+#chatControls {
+  position: relative;
+  top: 20vh;
+  left: 2vw;
+}
+
+.chatEvent {
+  font-family: Chat;
+  font-size: 2.5vw;
+  position: relative;
+  float: left;
+  padding: 0 2vw;
+  display: table-row-group;
+}
+
+.move {
+  color: green;
+}
+
 .action:hover {
   text-shadow: 2px 2px 5px green;
 }
@@ -132,6 +161,11 @@ body {
 @font-face {
   font-family: Description;
   src: url("./static/g.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: Chat;
+  src: url("./static/h.ttf") format("opentype");
 }
 
 

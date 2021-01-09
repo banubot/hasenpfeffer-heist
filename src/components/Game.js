@@ -15,14 +15,15 @@ export default function Game() {
   socket.on('newPlayer', handleNewPlayer); //notified new player joined
   socket.on('gameState', handleGameState); //state has changed
   //socket.on('newOpponent', handleNewOpponent); 
+  //todo: pull this out so initial state isn't duplicate in client and server
   const [gameState, setGameState] = useState({
     "room": "",
     "isPlaying": false,
     "strikes": 0,
     "players": {},
+    "chat": []
   });
   useEffect(() => {
-    //document.getElementById("gameMain").style.display = "none";
     document.getElementById("roomSelect").style.display = "none";
     document.getElementById("charSelect").style.display = "none";
     document.getElementById("vegSelect").style.display = "none";
@@ -55,68 +56,134 @@ export default function Game() {
     return (
       <div id="gameMain" >
         <img id="garden" src="../land2.png" alt="garden" />
-        <p id="roomCode">
-          <b>
-            Room Code:
+        <RoomCodeHeader />
+        <Players />
+        <Inventory />
+        <Chat />
+      </div>
+    );
+  }
+
+  function RoomCodeHeader() {
+    return (
+      <div id="roomCode">
+        <b>
+          Room Code:
           </b>
-          {" Brown Chestnut of Lorraine" + gameState.room}
-        </p>
-        <div id="players">
-          {Object.values(gameState.players).map((player) =>
-            <div>
-              <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
-              <p className="playerName">
-                {player.name}
-              </p>
-            </div>
-          )}
+        {" " + gameState.room}
+      </div>
+    );
+  }
+
+  function Players() {
+    return (
+      <div id="players">
+        {Object.values(gameState.players).map((player) =>
+          <div>
+            <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
+            <p className="playerName">
+              {player.name}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function Inventory() {
+    return (
+      <div id="inventory">
+        <div id="actions">
+          <b className="inventoryHeader">
+            Actions
+            </b>
+          <p className="action">
+            Swipe
+            </p>
+          <p className="action">
+            Stash
+            </p>
+          <p className="action">
+            Dig
+            </p>
+          <p className="action">
+            Block
+            </p>
+          <p className="action">
+            End Turn
+            </p>
         </div>
-        <div id="inventory">
-          <div id="actions">
-            <b className="inventoryHeader">
-              Actions
+        <div id="paws">
+          <b className="inventoryHeader">
+            Paws
             </b>
-            <p className="action">
-              Swipe
-            </p>
-            <p className="action">
-              Stash
-            </p>
-            <p className="action">
-              Dig
-            </p>
-            <p className="action">
-              Block
-            </p>
-            <p className="action">
-              End Turn
-            </p>
-          </div>
-          <div id="paws">
-            <b className="inventoryHeader">
-              Paws
+          <br />
+          <img className="stashItem" src={"../vegetables/tomato.png"} />
+          <img className="stashItem" src={"../vegetables/tomato.png"} />
+        </div>
+        <div id="burrow">
+          <b className="inventoryHeader">
+            Burrow
             </b>
-            <br />
-            <img className="stashItem" src={"../vegetables/tomato.png"} />
-            <img className="stashItem" src={"../vegetables/tomato.png"} />
+          <br />
+          <img className="stashItem" src={"../vegetables/tomato.png"} />
+          <img className="stashItem" src={"../vegetables/tomato.png"} />
+          <img className="stashItem" src={"../vegetables/tomato.png"} />
+          <img className="stashItem" src={"../vegetables/tomato.png"} />
 
-          </div>
-          <div id="burrow">
-            <b className="inventoryHeader">
-              Burrow
-            </b>
-            <br />
-            <img className="stashItem" src={"../vegetables/tomato.png"} />
-            <img className="stashItem" src={"../vegetables/tomato.png"} />
-            <img className="stashItem" src={"../vegetables/tomato.png"} />
-            <img className="stashItem" src={"../vegetables/tomato.png"} />
-
-          </div>
         </div>
       </div>
     );
   }
-  //}
+
+  function Chat() {
+    return (
+      <div id="chat">
+        <div id="chatbox">
+          {gameState.chat.map(event =>
+            <>
+              <div className="chatEvent">
+                {mapEvent(event)}
+              </div>
+              <br />
+            </>
+          )}
+        </div>
+        <div id="chatControls">
+          <input type="select" id="chatInput" placeholder="Type in the chat..." />
+          <button onClick={() => submitNewChat(playerName)} id="chatButton">
+            Submit
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function mapEvent(event) {
+    switch (event.type) {
+      case "chat":
+        return (
+          <div className="chatPost">
+            <b>
+              {event.player}
+            </b>
+            : {event.description}
+          </div>
+        );
+      case "move":
+        return (
+          <div className="move">
+            <i>
+              {event.player}
+              {event.description}
+            </i>
+          </div>
+        );
+      default:
+        return;
+    }
+  }
+
   function GameIntro() {
     return (
       <center id="intro">
@@ -148,30 +215,42 @@ export default function Game() {
     playerName = document.getElementById("nameInput").value;
     document.getElementById("intro").style.display = "none";
     document.getElementById("charSelect").style.display = "block";
+    console.log(playerName);
+
   }
 
   function newGame() {
     socket.emit('newGame', playerName, faveVeg, rabbitPicName);
     init();
+    console.log(playerName);
+
   }
 
   function init() {
     document.getElementById("roomSelect").style.display = "none";
     document.getElementById("gameMain").style.display = "block";
+    console.log(playerName);
+
   }
 
   function joinGame() {
     const code = document.getElementById("codeInput").value;
     socket.emit('joinGame', code, playerName, faveVeg, rabbitPicName);
     init();
+    console.log(playerName);
+
   }
 
   function handlePlayerNum(clientNum) {
     playerNum = clientNum;
+    console.log(playerName);
+
   }
 
   function handleNewPlayer(newPlayerName) {
     console.log(newPlayerName + " joined the game");
+    console.log(playerName);
+
   }
 
   function CharSelect() {
@@ -214,16 +293,29 @@ export default function Game() {
     faveVeg = e.target.id;
     document.getElementById("vegSelect").style.display = "none";
     document.getElementById("roomSelect").style.display = "block";
+    console.log(playerName);
+
   }
 
   function handleSelectCharacter(e) {
     rabbitPicName = e.target.id;
     document.getElementById("charSelect").style.display = "none";
     document.getElementById("vegSelect").style.display = "block";
+    console.log(playerName);
+
   }
 
   function handleGameState(newState) {
     console.log(newState)
     setGameState(JSON.parse(newState));
+    console.log(playerName);
+
+  }
+
+  function submitNewChat(name) {
+    let newChatText = document.getElementById("chatInput").value;
+    document.getElementById("chatInput").value = "";
+    console.log(name);
+    socket.emit('newChat', gameState.room, playerName, newChatText);
   }
 }

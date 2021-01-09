@@ -6,6 +6,7 @@ const breeds = require('../data/breeds.json').breeds;
 io.on('connection', client => {
   client.on('newGame', handleNewGame);
   client.on('joinGame', handleJoinGame);
+  client.on('newChat', handleNewChat);
 
   function handleNewGame(playerName, faveVeg, rabbitImg) {
     let roomCode = newRoomCode();
@@ -51,11 +52,23 @@ io.on('connection', client => {
 
   function addNewPlayer(code, clientNum, playerName, faveVeg, rabbitImg) {
     state[code].players[clientNum] = (new Player(clientNum, playerName, faveVeg, rabbitImg))
-    emitGameState(code, state[code]);
-    io.sockets.in(code).emit("newPlayer", playerName); //, JSON.stringify(state[code]));
+    emitGameState(code);
+    io.sockets.in(code).emit("newPlayer", playerName);
+    addToChat(code, playerName, "move", " joined the game!")
   }
 
-  function emitGameState(room, roomState) {
+  function handleNewChat(room, playerName, newChat) {
+    addToChat(room, playerName, "chat", newChat)
+    emitGameState(room);
+  }
+
+  function addToChat(room, player, type, description) {
+    let roomState = state[room];
+    roomState.chat.push(new Event(player, type, description));
+  }
+
+  function emitGameState(room) {
+    let roomState = state[room];
     io.sockets.in(room).emit("gameState", JSON.stringify(roomState));
   }
 
@@ -65,6 +78,7 @@ io.on('connection', client => {
       "isPlaying": true,
       "strikes": 0,
       "players": {},
+      "chat": [],
     };
   }
 });
@@ -78,5 +92,11 @@ function Player(number, name, favVeg, rabbitImg) {
   this.paws = [];
   this.stash = [];
 };
+
+function Event(player, type, description) {
+  this.player = player;
+  this.type = type;
+  this.description = description;
+}
 
 io.listen(3000);
