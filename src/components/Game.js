@@ -83,7 +83,7 @@ export default function Game() {
         {Object.values(gameState.players).map((player) =>
           <div >
             <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
-            <p className={"playerName" + (player.num == gameState.turn ? '' : ' current')}>
+            <p className={"playerName" + (player.num == gameState.turn ? ' current' : '')}>
               {player.name}
             </p>
           </div>

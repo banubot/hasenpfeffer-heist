@@ -70,8 +70,8 @@ io.on('connection', client => {
     let currentPlayer = roomState.players[roomState.turn];
     currentPlayer.actions["Dig"] = 0;
     currentPlayer.actions["End Turn"] = 0;
-    console.log("next player " + roomState.turn % roomState.players.length)
-    setNextPlayerTurn(room, 1);
+    let nextPlayer = (roomState.turn % Object.keys(roomState.players).length) + 1;
+    setNextPlayerTurn(room, nextPlayer);
     emitGameState(room);
 
   }
