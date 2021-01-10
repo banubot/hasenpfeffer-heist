@@ -36,3 +36,4 @@ add more rabbit breeds
 limit paws to 2
 veg points show on hover
 chat font doesn't like numbers :(
+why are vegs weirdly stacking

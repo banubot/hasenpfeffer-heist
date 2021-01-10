@@ -88,16 +88,15 @@ io.on('connection', client => {
     let randInt = Math.floor(Math.random() * 2);
     //todo: adjust odds
     //if (randInt === 0) {
-    newVeg(room, player);
+    //  newVeg(room, player);
     //  } else if (randInt === 1) {
-    //  newAction(roomState, player);
+    newAction(room, player);
     //} else {
     //   newStrike(roomState, player);
     // }
   }
 
   function newVeg(room, player) {
-    console.log(vegs)
     let randInt = Math.floor(Math.random() * vegs.length);
 
     let veg = vegs[randInt];
@@ -106,7 +105,7 @@ io.on('connection', client => {
     player.paws.push(veg);
     addToChat(room, player.name, "move", ` found ${veg.name}.`);
     if (veg.name === player.faveVeg) {
-      addToChat(room, player.name, "move", ` loves ${veg.name}! <3`);
+      addToChat(room, player.name, "move", ` loves ${veg.name}! ♥`);
     }
 
   }
@@ -115,8 +114,18 @@ io.on('connection', client => {
 
   }
 
-  function newAction(roomState, player) {
-
+  function newAction(room, player) {
+    let randInt = Math.floor(Math.random() * 3);
+    let action;
+    if (randInt === 0) {
+      action = "Stash";
+    } else if (randInt === 1) {
+      action = "Steal";
+    } else {
+      action = "Block";
+    }
+    player.actions[action]++;
+    addToChat(room, player.name, "move", ` gained a ${action} action.`);
   }
 
   function setNextPlayerTurn(room, playerNum) {
