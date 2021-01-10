@@ -57,9 +57,21 @@ export default function Game() {
       <div id="gameMain" >
         <img id="garden" src="../land2.png" alt="garden" />
         <RoomCodeHeader />
+        <Strikes />
         <Players />
         <Inventory />
         <Chat />
+      </div>
+    );
+  }
+
+  function Strikes() {
+    return (
+      <div id="strikes">
+        <b>
+          Strikes:
+        </b>
+        {" " + gameState.strikes}
       </div>
     );
   }

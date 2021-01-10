@@ -37,3 +37,6 @@ limit paws to 2
 veg points show on hover
 chat font doesn't like numbers :(
 why are vegs weirdly stacking
+handle end game
+why is "its your turn" chat the only one not on the left?
+chat always scrolls to bottom

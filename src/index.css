@@ -123,6 +123,13 @@ button {
   font-size: 3vw;
 }
 
+#strikes {
+  font-family: "Description";
+  position: absolute;
+  left: 7vw;
+  top: 15vw;
+}
+
 #chatbox {
   position: fixed;
   width: 52vw;

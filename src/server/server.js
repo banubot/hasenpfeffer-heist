@@ -35,7 +35,6 @@ io.on('connection', client => {
       client.emit("unknownRoom");
       return;
     }
-    console.log("num clients is " + numClients)
     joinRoom(code, numClients + 1, playerName, faveVeg, rabbitImg);
   }
 
@@ -85,32 +84,43 @@ io.on('connection', client => {
   }
 
   function generateRandomEvent(room, player) {
-    let randInt = Math.floor(Math.random() * 2);
+    let randInt = Math.floor(Math.random() * 3);
     //todo: adjust odds
-    //if (randInt === 0) {
-    //  newVeg(room, player);
-    //  } else if (randInt === 1) {
-    newAction(room, player);
-    //} else {
-    //   newStrike(roomState, player);
-    // }
+    if (randInt === 0) {
+      newVeg(room, player);
+    } else if (randInt === 1) {
+      newAction(room, player);
+    } else {
+      newStrike(room, player);
+    }
   }
 
   function newVeg(room, player) {
     let randInt = Math.floor(Math.random() * vegs.length);
-
     let veg = vegs[randInt];
-    console.log(veg)
-
     player.paws.push(veg);
     addToChat(room, player.name, "move", ` found ${veg.name}.`);
     if (veg.name === player.faveVeg) {
       addToChat(room, player.name, "move", ` loves ${veg.name}! ♥`);
     }
-
   }
 
-  function newStrike(roomState, player) {
+  function newStrike(room, player) {
+    let roomState = state[room];
+    roomState.strikes++;
+    let catchers = ["dog", "cat", "gardener"];
+    let randInt = Math.floor(Math.random() * 3);
+    let catcher = catchers[randInt];
+    addToChat(room, player.name, "move", ` was caught digging in the garden by the ${catcher}!`);
+    player.paws = [];
+    addToChat(room, player.name, "move", ` dropped their veggies and ran from the ${catcher}.`);
+    if (roomState.strikes === 3) {
+      endGame(roomState);
+    }
+    handleEndTurn(room, player.name);
+  }
+
+  function endGame(roomState) {
 
   }
 
@@ -129,7 +139,6 @@ io.on('connection', client => {
   }
 
   function setNextPlayerTurn(room, playerNum) {
-    console.log("setting player to " + playerNum)
     let roomState = state[room];
     roomState.turn = playerNum;
     let player = roomState.players[playerNum];
