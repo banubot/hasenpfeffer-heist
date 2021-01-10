@@ -2,12 +2,14 @@ const io = require('socket.io')();
 const state = {};
 const clientRooms = {};
 const breeds = require('../data/breeds.json').breeds;
+const vegs = require('../data/vegetables.json');
 
 io.on('connection', client => {
   client.on('newGame', handleNewGame);
   client.on('joinGame', handleJoinGame);
   client.on('newChat', handleNewChat);
   client.on('endTurn', handleEndTurn);
+  client.on('dig', handleDig);
 
   function handleNewGame(playerName, faveVeg, rabbitImg) {
     let roomCode = newRoomCode();
@@ -72,7 +74,48 @@ io.on('connection', client => {
     currentPlayer.actions["End Turn"] = 0;
     let nextPlayer = (roomState.turn % Object.keys(roomState.players).length) + 1;
     setNextPlayerTurn(room, nextPlayer);
-    emitGameState(room);
+  }
+
+  function handleDig(room, playerNum) {
+    let roomState = state[room];
+    let player = roomState.players[playerNum];
+    player.actions["Dig"] = 0;
+    addToChat(room, player.name, "move", " is digging in the garden...");
+    generateRandomEvent(room, player);
+  }
+
+  function generateRandomEvent(room, player) {
+    let randInt = Math.floor(Math.random() * 2);
+    //todo: adjust odds
+    //if (randInt === 0) {
+    newVeg(room, player);
+    //  } else if (randInt === 1) {
+    //  newAction(roomState, player);
+    //} else {
+    //   newStrike(roomState, player);
+    // }
+  }
+
+  function newVeg(room, player) {
+    console.log(vegs)
+    let randInt = Math.floor(Math.random() * vegs.length);
+
+    let veg = vegs[randInt];
+    console.log(veg)
+
+    player.paws.push(veg);
+    addToChat(room, player.name, "move", ` found ${veg.name}.`);
+    if (veg.name === player.faveVeg) {
+      addToChat(room, player.name, "move", ` loves ${veg.name}! <3`);
+    }
+
+  }
+
+  function newStrike(roomState, player) {
+
+  }
+
+  function newAction(roomState, player) {
 
   }
 
@@ -109,11 +152,11 @@ io.on('connection', client => {
   }
 });
 
-function Player(number, name, favVeg, rabbitImg) {
+function Player(number, name, faveVeg, rabbitImg) {
   this.name = name;
   this.num = number;
   this.rabbitImg = rabbitImg;
-  this.favVeg = favVeg;
+  this.faveVeg = faveVeg;
   this.actions = {
     "Dig": 0,
     "Stash": 0,

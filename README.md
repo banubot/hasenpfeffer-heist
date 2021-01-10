@@ -31,3 +31,8 @@ game rooms must be unique
 grey out actions when it not your turn
 chat not left align for long text
 create help menu
+adjust odds of 3 random game events
+add more rabbit breeds
+limit paws to 2
+veg points show on hover
+chat font doesn't like numbers :(

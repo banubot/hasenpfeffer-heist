@@ -77,10 +77,6 @@ button {
   z-index: 0;
 }
 
-.stashItem {
-  max-width: 10vw;
-  max-height: 10vw;
-}
 
 .charName {
     font-size: 3vw;
@@ -130,7 +126,7 @@ button {
 #chatbox {
   position: fixed;
   width: 52vw;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(203, 238, 116, 0.9);
   height: 60vh;
   top: 20vw;
   left: 25vw;
@@ -162,6 +158,25 @@ button {
 
 .action:hover {
   text-shadow: 2px 2px 5px green;
+}
+
+.stashItem {
+  max-width: 10vw;
+  max-height: 10vw;
+  display: inline;
+  position: relative;
+}
+
+.vegPoints {
+  position: relative;
+  top: -10vw;
+  left: -5vw;
+ 
+}
+
+.vegDiv {
+  max-width: 10vw;
+  max-height: 10vw;
 }
 
 body {

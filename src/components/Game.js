@@ -94,31 +94,60 @@ export default function Game() {
   function Inventory() {
     return (
       <div id="inventory">
-        <div id="actions">
-          <b className="inventoryHeader">
-            Actions
+        <Actions />
+        <Paws />
+        <Burrow />
+      </div>
+    );
+  }
+
+  function Burrow() {
+    return (
+      <div id="burrow">
+        <b className="inventoryHeader">
+          Burrow
             </b>
-          {mapActions()}
-        </div>
+        <br />
+        <img className="stashItem" src={"../vegetables/tomato.png"} />
+        <img className="stashItem" src={"../vegetables/tomato.png"} />
+        <img className="stashItem" src={"../vegetables/tomato.png"} />
+        <img className="stashItem" src={"../vegetables/tomato.png"} />
+
+      </div>
+    );
+  }
+
+  function Paws() {
+    let player = gameState.players[playerNum];
+    if (player) {
+      console.log(player.paws)
+      return (
         <div id="paws">
           <b className="inventoryHeader">
             Paws
-            </b>
+        </b>
           <br />
-          <img className="stashItem" src={"../vegetables/tomato.png"} />
-          <img className="stashItem" src={"../vegetables/tomato.png"} />
+          {player.paws.map((veg) =>
+            <div class="vegDiv">
+              <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
+              <div className="vegPoints">
+                {veg.points}
+              </div>
+            </div>
+          )}
         </div>
-        <div id="burrow">
-          <b className="inventoryHeader">
-            Burrow
-            </b>
-          <br />
-          <img className="stashItem" src={"../vegetables/tomato.png"} />
-          <img className="stashItem" src={"../vegetables/tomato.png"} />
-          <img className="stashItem" src={"../vegetables/tomato.png"} />
-          <img className="stashItem" src={"../vegetables/tomato.png"} />
+      );
+    }
+    return null;
+  }
 
-        </div>
+  function Actions() {
+    return (
+      <div id="actions">
+        <b className="inventoryHeader">
+          Actions
+            </b>
+        {mapActions()}
       </div>
     );
   }
@@ -322,7 +351,7 @@ export default function Game() {
   }
 
   function handleDig() {
-    socket.emit('dig', gameState.room, playerName);
+    socket.emit('dig', gameState.room, playerNum);
   }
 
   function ActionEndTurn() {
