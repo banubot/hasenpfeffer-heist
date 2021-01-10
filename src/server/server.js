@@ -88,8 +88,11 @@ io.on('connection', client => {
     let roomState = state[room];
     let player = roomState.players[playerNum];
     player.actions["Stash"]--;
-    for (let pawVeg in player.paws) {
+    for (let i in player.paws) {
+      let pawVeg = player.paws[i];
+      console.log(pawVeg.name + " " + veg)
       if (pawVeg.name === veg) {
+        console.log("match")
         player.burrow.push(pawVeg);
         player.paws.pop(pawVeg);
       }
@@ -197,7 +200,7 @@ function Player(number, name, faveVeg, rabbitImg) {
     "End Turn": 0
   };
   this.paws = [];
-  this.stash = [];
+  this.burrow = [];
 };
 
 function Event(player, type, description) {

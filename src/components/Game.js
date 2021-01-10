@@ -151,7 +151,7 @@ export default function Game() {
         {Object.values(gameState.players).map((player) =>
           <div >
             <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
-            <p className={"playerName" + (player.num == gameState.turn ? ' current' : '')}>
+            <p className={"playerName" + (player.num === gameState.turn ? ' current' : '')}>
               {player.name}
             </p>
           </div>
@@ -172,19 +172,30 @@ export default function Game() {
   }
 
   function Burrow() {
-    return (
-      <div id="burrow">
-        <b className="inventoryHeader">
-          Burrow
-            </b>
-        <br />
-        <img className="stashItem" src={"../vegetables/tomato.png"} />
-        <img className="stashItem" src={"../vegetables/tomato.png"} />
-        <img className="stashItem" src={"../vegetables/tomato.png"} />
-        <img className="stashItem" src={"../vegetables/tomato.png"} />
 
-      </div>
-    );
+
+    let player = gameState.players[playerNum];
+    if (player) {
+      console.log(player.burrow)
+      return (
+        <div id="burrow">
+          <b className="inventoryHeader">
+            Burrow
+        </b>
+          <br />
+          {player.burrow.map((veg) =>
+            <div class="vegDiv">
+              <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
+              <div className="vegPoints">
+                {veg.points}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+    return null;
+
   }
 
   function Paws() {
