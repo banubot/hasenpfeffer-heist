@@ -28,8 +28,7 @@ On a turn,
 
 ### To Do
 game rooms must be unique
-player name not coming in actions
 grey out actions when it not your turn
 highlight in green shadow plyer whos turn it is
 actions pointer looks like link
-
+chat not left align for long text

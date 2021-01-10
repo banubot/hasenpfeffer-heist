@@ -27,6 +27,14 @@
   cursor: pointer;
 }
 
+button {
+  background-color: #DAFF7F;
+  font-family: "Description";
+  border: 1px solid black;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
 .current {
   text-shadow: 2px 2px 5px green;
 
