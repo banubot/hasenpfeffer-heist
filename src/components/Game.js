@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
 let playerName;
+let playerNum;
 
 export default function Game() {
-  let playerNum;
   let rabbitPicName;
   let faveVeg;
-  let players = [];
   const allVegs = require('../data/vegetables.json');
   const socket = io('http://localhost:3000');
 
   socket.on('playerNum', handlePlayerNum); //get which player you are
-  socket.on('newPlayer', handleNewPlayer); //notified new player joined
   socket.on('gameState', handleGameState); //state has changed
 
   //socket.on('newOpponent', handleNewOpponent); 
@@ -101,7 +99,6 @@ export default function Game() {
             Actions
             </b>
           {mapActions()}
-          <ActionEndTurn />
         </div>
         <div id="paws">
           <b className="inventoryHeader">
@@ -154,20 +151,30 @@ export default function Game() {
     let player = gameState.players[playerNum];
     if (player) {
       for (let action in player.actions) {
-        actions.push(mapAction(action));
-        return (actions);
+        actions.push(mapAction(action, player.actions[action]));
       }
     }
+    return (actions);
   }
 
-  function mapAction(action) {
-    let isTheirTurn = (gameState.turn === playerNum);
-    console.log(action);
-    // switch (action) {
-    //   case "Dig":
-    //     if 
-
-    // }
+  function mapAction(action, count) {
+    if (count > 0) {
+      let isTheirTurn = (gameState.turn === playerNum);
+      switch (action) {
+        case "Dig":
+          return (<ActionDig />);
+        case "Steal":
+          return (isTheirTurn ? ActionSteal(count) : null);
+        case "Stash":
+          return (isTheirTurn ? ActionStash(count) : null);
+        case "Block":
+          return ActionBlock(count);
+        case "End Turn":
+          return (<ActionEndTurn />);
+        default:
+          return;
+      }
+    }
   }
 
   function mapEvent(event) {
@@ -226,42 +233,26 @@ export default function Game() {
     playerName = document.getElementById("nameInput").value;
     document.getElementById("intro").style.display = "none";
     document.getElementById("charSelect").style.display = "block";
-    console.log(playerName);
-
   }
 
   function newGame() {
     socket.emit('newGame', playerName, faveVeg, rabbitPicName);
     init();
-    console.log(playerName);
-
   }
 
   function init() {
     document.getElementById("roomSelect").style.display = "none";
     document.getElementById("gameMain").style.display = "block";
-    console.log(playerName);
-
   }
 
   function joinGame() {
     const code = document.getElementById("codeInput").value;
     socket.emit('joinGame', code, playerName, faveVeg, rabbitPicName);
     init();
-    console.log(playerName);
-
   }
 
   function handlePlayerNum(clientNum) {
     playerNum = clientNum;
-    console.log(playerName);
-
-  }
-
-  function handleNewPlayer(newPlayerName) {
-    console.log(newPlayerName + " joined the game");
-    console.log(playerName);
-
   }
 
   function CharSelect() {
@@ -304,29 +295,21 @@ export default function Game() {
     faveVeg = e.target.id;
     document.getElementById("vegSelect").style.display = "none";
     document.getElementById("roomSelect").style.display = "block";
-    console.log(playerName);
-
   }
 
   function handleSelectCharacter(e) {
     rabbitPicName = e.target.id;
     document.getElementById("charSelect").style.display = "none";
     document.getElementById("vegSelect").style.display = "block";
-    console.log(playerName);
-
   }
 
   function handleGameState(newState) {
-    console.log(newState)
     setGameState(JSON.parse(newState));
-    console.log(playerName);
-
   }
 
   function submitNewChat(name) {
     let newChatText = document.getElementById("chatInput").value;
     document.getElementById("chatInput").value = "";
-    console.log(name);
     socket.emit('newChat', gameState.room, playerName, newChatText);
   }
 
@@ -339,7 +322,6 @@ export default function Game() {
   }
 
   function handleDig() {
-
     socket.emit('dig', gameState.room, playerName);
   }
 
@@ -352,8 +334,42 @@ export default function Game() {
   }
 
   function handleEndTurn() {
-    console.log(playerName);
-
     socket.emit('endTurn', gameState.room, playerName);
+  }
+
+  function ActionSteal(count) {
+    return (
+      <p id="steal" onClick={handleSteal} className="action">
+        Steal {count > 1 ? "x" + count : ""}
+      </p>
+    );
+  }
+
+  function handleSteal() {
+    socket.emit('steal', gameState.room, playerName);
+  }
+
+  function ActionBlock(count) {
+    return (
+      <p id="block" onClick={handleBlock} className="action">
+        Block {count > 1 ? "x" + count : ""}
+      </p>
+    );
+  }
+
+  function handleBlock() {
+    socket.emit('block', gameState.room, playerName);
+  }
+
+  function ActionStash(count) {
+    return (
+      <p id="stash" onClick={handleStash} className="action">
+        Stash {count > 1 ? "x" + count : ""}
+      </p>
+    );
+  }
+
+  function handleStash() {
+    socket.emit('stash', gameState.room, playerName);
   }
 }
