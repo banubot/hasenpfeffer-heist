@@ -23,6 +23,15 @@
   font-size: 3.5vw;
 }
 
+.action {
+  cursor: pointer;
+}
+
+.current {
+  text-shadow: 2px 2px 5px green;
+
+}
+
 .charDiv {
   display: inline-block;
   margin: 0.5vw;
@@ -52,7 +61,7 @@
 }
 
 #garden {
-  position: absolute;
+  position: fixed;
   width: 100vw;
   top: 70vh;
   left: 0;
@@ -111,19 +120,19 @@
 }
 
 #chatbox {
-  position: relative;
+  position: fixed;
   width: 52vw;
   background-color: rgba(255, 255, 255, 0.2);
   height: 60vh;
   top: 20vw;
-  left: 2vw;
+  left: 25vw;
   overflow-y: scroll;
 }
 
 #chatControls {
-  position: relative;
-  top: 20vh;
-  left: 2vw;
+  position: fixed;
+  top: 90vh;
+  left: 30vw;
 }
 
 .chatEvent {
@@ -137,6 +146,10 @@
 
 .move {
   color: green;
+}
+
+.chatPost {
+  color: peru;
 }
 
 .action:hover {

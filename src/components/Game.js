@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
+let playerName;
 
 export default function Game() {
   let playerNum;
   let rabbitPicName;
   let faveVeg;
-  let playerName;
   let players = [];
   const allVegs = require('../data/vegetables.json');
   const socket = io('http://localhost:3000');
@@ -14,6 +14,7 @@ export default function Game() {
   socket.on('playerNum', handlePlayerNum); //get which player you are
   socket.on('newPlayer', handleNewPlayer); //notified new player joined
   socket.on('gameState', handleGameState); //state has changed
+
   //socket.on('newOpponent', handleNewOpponent); 
   //todo: pull this out so initial state isn't duplicate in client and server
   const [gameState, setGameState] = useState({
@@ -21,7 +22,8 @@ export default function Game() {
     "isPlaying": false,
     "strikes": 0,
     "players": {},
-    "chat": []
+    "chat": [],
+    "turn": 1
   });
   useEffect(() => {
     document.getElementById("roomSelect").style.display = "none";
@@ -79,14 +81,15 @@ export default function Game() {
     return (
       <div id="players">
         {Object.values(gameState.players).map((player) =>
-          <div>
+          <div >
             <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
-            <p className="playerName">
+            <p className={"playerName" + (player.num == gameState.turn ? '' : ' current')}>
               {player.name}
             </p>
           </div>
-        )}
-      </div>
+        )
+        }
+      </div >
     );
   }
 
@@ -97,21 +100,8 @@ export default function Game() {
           <b className="inventoryHeader">
             Actions
             </b>
-          <p className="action">
-            Swipe
-            </p>
-          <p className="action">
-            Stash
-            </p>
-          <p className="action">
-            Dig
-            </p>
-          <p className="action">
-            Block
-            </p>
-          <p className="action">
-            End Turn
-            </p>
+          {mapActions()}
+          <ActionEndTurn />
         </div>
         <div id="paws">
           <b className="inventoryHeader">
@@ -157,6 +147,27 @@ export default function Game() {
         </div>
       </div>
     );
+  }
+
+  function mapActions() {
+    let actions = [];
+    let player = gameState.players[playerNum];
+    if (player) {
+      for (let action in player.actions) {
+        actions.push(mapAction(action));
+        return (actions);
+      }
+    }
+  }
+
+  function mapAction(action) {
+    let isTheirTurn = (gameState.turn === playerNum);
+    console.log(action);
+    // switch (action) {
+    //   case "Dig":
+    //     if 
+
+    // }
   }
 
   function mapEvent(event) {
@@ -317,5 +328,32 @@ export default function Game() {
     document.getElementById("chatInput").value = "";
     console.log(name);
     socket.emit('newChat', gameState.room, playerName, newChatText);
+  }
+
+  function ActionDig() {
+    return (
+      <p id="dig" onClick={handleDig} className="action">
+        Dig
+      </p>
+    );
+  }
+
+  function handleDig() {
+
+    socket.emit('dig', gameState.room, playerName);
+  }
+
+  function ActionEndTurn() {
+    return (
+      <p id="endTurn" onClick={handleEndTurn} className="action">
+        End Turn
+      </p>
+    );
+  }
+
+  function handleEndTurn() {
+    console.log(playerName);
+
+    socket.emit('endTurn', gameState.room, playerName);
   }
 }
