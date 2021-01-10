@@ -40,3 +40,5 @@ why are vegs weirdly stacking
 handle end game
 why is "its your turn" chat the only one not on the left?
 chat always scrolls to bottom
+fix the burrow
+some kind of shadow on choices

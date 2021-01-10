@@ -10,6 +10,7 @@ io.on('connection', client => {
   client.on('newChat', handleNewChat);
   client.on('endTurn', handleEndTurn);
   client.on('dig', handleDig);
+  client.on('stash', handleStash);
 
   function handleNewGame(playerName, faveVeg, rabbitImg) {
     let roomCode = newRoomCode();
@@ -81,6 +82,19 @@ io.on('connection', client => {
     player.actions["Dig"] = 0;
     addToChat(room, player.name, "move", " is digging in the garden...");
     generateRandomEvent(room, player);
+  }
+
+  function handleStash(room, playerNum, veg) {
+    let roomState = state[room];
+    let player = roomState.players[playerNum];
+    player.actions["Stash"]--;
+    for (let pawVeg in player.paws) {
+      if (pawVeg.name === veg) {
+        player.burrow.push(pawVeg);
+        player.paws.pop(pawVeg);
+      }
+    }
+    addToChat(room, player.name, "move", ` put ${veg} in their burrow for safe keeping.`);
   }
 
   function generateRandomEvent(room, player) {

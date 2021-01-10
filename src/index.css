@@ -76,8 +76,59 @@ button {
   height: 30vh;
   z-index: 0;
 }
+.decision {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
 
+.decisionMain {
+  position: relative;
+  width: 50vw;
+  height: 35vw;
+  top: 30vh;
 
+  background-color: rgba(203, 238, 116, 1);
+}
+
+.choices {
+  position: relative;
+  top: 10vw;
+
+}
+
+.choiceDiv:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.choiceDiv {
+  display: contents;
+  cursor: pointer;
+
+}
+
+.choice {
+  display: inline;
+  padding: 1vw;
+
+}
+
+.question {
+  position: relative;
+  font-family: Description;
+  font-size: 4vw;
+  top: 5vw;
+}
+
+.blackout{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+}
 .charName {
     font-size: 3vw;
     margin: 0;
@@ -128,6 +179,10 @@ button {
   position: absolute;
   left: 7vw;
   top: 15vw;
+}
+
+.decision {
+  display: none;
 }
 
 #chatbox {

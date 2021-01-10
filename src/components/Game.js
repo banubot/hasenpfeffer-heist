@@ -61,8 +61,66 @@ export default function Game() {
         <Players />
         <Inventory />
         <Chat />
+        <StashDecision />
+        <StealDecision />
       </div>
     );
+  }
+
+  function StashDecision() {
+    let player = gameState.players[playerNum];
+    if (player) {
+      return (
+        <div className="decision" id="stashDecision">
+          <div className="blackout">
+          </div>
+          <div className="decisionMain">
+            <div className="question">
+              Which veggie do you want to stash?
+            </div>
+            <div className="choices">
+              {player.paws.map((veg) =>
+                <div class="choiceDiv">
+                  <img className="stashItem choice" onClick={() => stashSelect(veg.name)} src={`../vegetables/${veg.vegImg}`} />
+                  <div className="vegPoints choice">
+                    {veg.points}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  function StealDecision() {
+    let player = gameState.players[playerNum];
+    if (player) {
+      return (
+        <div className="decision" id="stealDecision">
+          <div className="blackout">
+          </div>
+          <div className="decisionMain">
+            <div className="question">
+              Which veggie do you want to stash?
+            </div>
+            <div className="choices">
+              {player.paws.map((veg) =>
+                <div class="choice">
+                  <img className="stashItem" onClick={veg.name} src={`../vegetables/${veg.vegImg}`} />
+                  <div className="vegPoints">
+                    {veg.points}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
   }
 
   function Strikes() {
@@ -411,6 +469,21 @@ export default function Game() {
   }
 
   function handleStash() {
-    socket.emit('stash', gameState.room, playerName);
+    let player = gameState.players[playerNum];
+    if (player) {
+      if (player.paws.length > 1) {
+        document.getElementById("stashDecision").style.display = "block";
+      } else if (player.paws.length > 0) {
+        let veg = player.paws[0].name;
+        socket.emit('stash', gameState.room, playerNum, veg);
+      }
+      //todo: tell player they can't stash w no items
+    }
+  }
+
+  function stashSelect(veg) {
+    console.log(veg)
+    document.getElementById("stashDecision").style.display = "none";
+    socket.emit('stash', gameState.room, playerNum, veg);
   }
 }
