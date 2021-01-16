@@ -115,6 +115,7 @@ io.on('connection', client => {
         if (oppVeg.name === vegName) {
           player.paws.push(oppVeg);
           opponent.paws.pop(oppVeg);
+          tallyScores(roomState);
           addToChat(room, player.name, "move", ` stole ${vegName} from ${opponent.name}!`);
         }
       }
@@ -137,6 +138,7 @@ io.on('connection', client => {
     let randInt = Math.floor(Math.random() * vegs.length);
     let veg = vegs[randInt];
     player.paws.push(veg);
+    tallyScores(state[room]);
     addToChat(room, player.name, "move", ` found ${veg.name}.`);
     if (veg.name === player.faveVeg) {
       addToChat(room, player.name, "move", ` loves ${veg.name}! ♥`);
@@ -151,15 +153,38 @@ io.on('connection', client => {
     let catcher = catchers[randInt];
     addToChat(room, player.name, "move", ` was caught digging in the garden by the ${catcher}!`);
     player.paws = [];
+    tallyScores(roomState);
     addToChat(room, player.name, "move", ` dropped their veggies and ran from the ${catcher}.`);
     if (roomState.strikes === 3) {
-      endGame(roomState);
+      endGame(room);
     }
     handleEndTurn(room, player.name);
   }
 
-  function endGame(roomState) {
+  function endGame(room) {
+    io.sockets.in(room).emit("endGame");
+  }
 
+  function tallyScores(roomState) {
+    for (let i in roomState.players) {
+      player = roomState.players[i];
+      player.score = 0;
+      let veg;
+      for (let j in player.paws) {
+        veg = player.paws[j];
+        player.score += veg.points;
+        if (player.faveVeg === veg.name) {
+          player.score++;
+        }
+      }
+      for (let k in player.burrow) {
+        veg = player.burrow[k];
+        player.score += veg.points;
+        if (player.faveVeg === veg.name) {
+          player.score++;
+        }
+      }
+    }
   }
 
   function newAction(room, player) {
@@ -216,12 +241,13 @@ function Player(number, name, faveVeg, rabbitImg) {
   this.actions = {
     "Dig": 0,
     "Stash": 0,
-    "Steal": 1,
-    "Block": 1,
+    "Steal": 0,
+    "Block": 0,
     "End Turn": 0
   };
   this.paws = [];
   this.burrow = [];
+  this.score = 0;
 };
 
 function Event(player, type, description) {

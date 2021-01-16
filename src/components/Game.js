@@ -173,6 +173,12 @@ export default function Game() {
             <p className={"playerName" + (player.num === gameState.turn ? ' current' : '')}>
               {player.name}
             </p>
+            <p className={"score"}>
+              <b>
+                score:
+              </b>
+              {player.score}
+            </p>
           </div>
         )
         }
