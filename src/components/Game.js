@@ -67,6 +67,53 @@ export default function Game() {
     );
   }
 
+  function StealDecision() {
+    let player = gameState.players[playerNum];
+    if (player) {
+      return (
+        <div className="decision" id="stealDecision">
+          <div className="blackout">
+          </div>
+          <div className="decisionMain">
+            <div className="question">
+              Which veggie do you want to steal?
+            </div>
+            <div className="choices">
+              {getStealablePlayers().map((player) =>
+                <div className="stealOpponent">
+                  <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
+                  <div className="opponentVeg">
+                    {player.paws.map((veg) =>
+                      <div class="choiceDiv">
+                        <img className="stashItem choice" onClick={() => stealSelect(player.num, veg.name)} src={`../vegetables/${veg.vegImg}`} />
+                        <div className="vegPoints choice">
+                          {veg.points}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  function getStealablePlayers() {
+    let stealable = [];
+    for (let i in gameState.players) {
+      let opponent = gameState.players[i];
+      if (opponent.num !== playerNum && opponent.paws.length > 0) {
+        stealable.push(gameState.players[i]);
+
+      }
+    }
+    return stealable;
+  }
+
   function StashDecision() {
     let player = gameState.players[playerNum];
     if (player) {
@@ -80,36 +127,8 @@ export default function Game() {
             </div>
             <div className="choices">
               {player.paws.map((veg) =>
-                <div class="choiceDiv">
-                  <img className="stashItem choice" onClick={() => stashSelect(veg.name)} src={`../vegetables/${veg.vegImg}`} />
-                  <div className="vegPoints choice">
-                    {veg.points}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  }
-
-  function StealDecision() {
-    let player = gameState.players[playerNum];
-    if (player) {
-      return (
-        <div className="decision" id="stealDecision">
-          <div className="blackout">
-          </div>
-          <div className="decisionMain">
-            <div className="question">
-              Which veggie do you want to stash?
-            </div>
-            <div className="choices">
-              {player.paws.map((veg) =>
                 <div class="choice">
-                  <img className="stashItem" onClick={veg.name} src={`../vegetables/${veg.vegImg}`} />
+                  <img className="stashItem" onClick={() => stashSelect(veg.name)} src={`../vegetables/${veg.vegImg}`} />
                   <div className="vegPoints">
                     {veg.points}
                   </div>
@@ -172,8 +191,6 @@ export default function Game() {
   }
 
   function Burrow() {
-
-
     let player = gameState.players[playerNum];
     if (player) {
       console.log(player.burrow)
@@ -417,7 +434,7 @@ export default function Game() {
     setGameState(JSON.parse(newState));
   }
 
-  function submitNewChat(name) {
+  function submitNewChat() {
     let newChatText = document.getElementById("chatInput").value;
     document.getElementById("chatInput").value = "";
     socket.emit('newChat', gameState.room, playerName, newChatText);
@@ -456,7 +473,11 @@ export default function Game() {
   }
 
   function handleSteal() {
-    socket.emit('steal', gameState.room, playerName);
+    //might be nobody has anything to steal
+    if (getStealablePlayers().length > 0) {
+      document.getElementById("stealDecision").style.display = "block";
+    }
+    //todo tell player nobody to steal from
   }
 
   function ActionBlock(count) {
@@ -492,8 +513,13 @@ export default function Game() {
     }
   }
 
+  function stealSelect(opponentNum, vegName) {
+    console.log(opponentNum + vegName);
+    document.getElementById("stealDecision").style.display = "none";
+    socket.emit('steal', gameState.room, playerNum, opponentNum, vegName);
+  }
+
   function stashSelect(veg) {
-    console.log(veg)
     document.getElementById("stashDecision").style.display = "none";
     socket.emit('stash', gameState.room, playerNum, veg);
   }

@@ -233,12 +233,16 @@ button {
   position: relative;
   top: -10vw;
   left: -5vw;
+  display: inline;
+
  
 }
 
 .vegDiv {
   max-width: 10vw;
   max-height: 10vw;
+  display: contents;
+
 }
 
 body {

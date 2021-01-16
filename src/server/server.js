@@ -11,6 +11,7 @@ io.on('connection', client => {
   client.on('endTurn', handleEndTurn);
   client.on('dig', handleDig);
   client.on('stash', handleStash);
+  client.on('steal', handleSteal);
 
   function handleNewGame(playerName, faveVeg, rabbitImg) {
     let roomCode = newRoomCode();
@@ -19,6 +20,7 @@ io.on('connection', client => {
     joinRoom(roomCode, 1, playerName, faveVeg, rabbitImg);
     setNextPlayerTurn(roomCode, 1);
   }
+
 
   function handleJoinGame(code, playerName, faveVeg, rabbitImg) {
     const room = io.sockets.adapter.rooms[code];
@@ -90,14 +92,33 @@ io.on('connection', client => {
     player.actions["Stash"]--;
     for (let i in player.paws) {
       let pawVeg = player.paws[i];
-      console.log(pawVeg.name + " " + veg)
       if (pawVeg.name === veg) {
-        console.log("match")
         player.burrow.push(pawVeg);
         player.paws.pop(pawVeg);
       }
     }
     addToChat(room, player.name, "move", ` put ${veg} in their burrow for safe keeping.`);
+  }
+
+  function handleSteal(room, playerNum, opponentNum, vegName) {
+    let roomState = state[room];
+    let player = roomState.players[playerNum];
+    let opponent = roomState.players[opponentNum];
+    player.actions["Steal"]--;
+    //block
+    if (opponent.actions["Block"] > 1) {
+      opponent.actions["Block"]--;
+      addToChat(room, opponent.name, "move", ` blocked ${player.name} from stealing ${vegName}`);
+    } else {
+      for (let i in opponent.paws) {
+        let oppVeg = opponent.paws[i];
+        if (oppVeg.name === vegName) {
+          player.paws.push(oppVeg);
+          opponent.paws.pop(oppVeg);
+          addToChat(room, player.name, "move", ` stole ${vegName} from ${opponent.name}!`);
+        }
+      }
+    }
   }
 
   function generateRandomEvent(room, player) {
@@ -195,8 +216,8 @@ function Player(number, name, faveVeg, rabbitImg) {
   this.actions = {
     "Dig": 0,
     "Stash": 0,
-    "Steal": 0,
-    "Block": 0,
+    "Steal": 1,
+    "Block": 1,
     "End Turn": 0
   };
   this.paws = [];
