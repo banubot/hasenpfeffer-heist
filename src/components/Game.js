@@ -12,6 +12,7 @@ export default function Game() {
 
   socket.on('playerNum', handlePlayerNum); //get which player you are
   socket.on('gameState', handleGameState); //state has changed
+  socket.on('endGame', handleEndGame);
 
   //socket.on('newOpponent', handleNewOpponent); 
   //todo: pull this out so initial state isn't duplicate in client and server
@@ -63,43 +64,85 @@ export default function Game() {
         <Chat />
         <StashDecision />
         <StealDecision />
+        <EndGame />
       </div>
     );
   }
 
-  function StealDecision() {
-    let player = gameState.players[playerNum];
-    if (player) {
-      return (
-        <div className="decision" id="stealDecision">
-          <div className="blackout">
-          </div>
-          <div className="decisionMain">
-            <div className="question">
-              Which veggie do you want to steal?
+  function EndGame() {
+    return (
+      <div className="decision" id="endGame">
+        <div className="blackout">
+        </div>
+        <div className="decisionMain">
+          <div className="question">
+            Game Over...{getWinner()} wins!
             </div>
-            <div className="choices">
-              {getStealablePlayers().map((player) =>
-                <div className="stealOpponent">
-                  <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
-                  <div className="opponentVeg">
-                    {player.paws.map((veg) =>
-                      <div class="choiceDiv">
-                        <img className="stashItem choice" onClick={() => stealSelect(player.num, veg.name)} src={`../vegetables/${veg.vegImg}`} />
-                        <div className="vegPoints choice">
-                          {veg.points}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+          <div className="choices">
+            {Object.values(gameState.players).map((player) =>
+              <div >
+                <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
+                <p className={"playerName" + (player.num === gameState.turn ? ' current' : '')}>
+                  {player.name}
+                </p>
+                <p className={"score"}>
+                  <b>
+                    score:
+                  </b>
+                  {player.score}
+                </p>
+              </div>
+            )}
           </div>
         </div>
-      );
+      </div>
+    );
+  }
+
+  function getWinner() {
+    let winnerName = "";
+    let winnerScore = 0;
+    for (let i in gameState.players) {
+      let player = gameState.players[i];
+      if (player.score === winnerScore) {
+        winnerName += " " + player;
+      } else if (player.score > winnerScore) {
+        winnerScore = player.score;
+        winnerName = player.name;
+      }
     }
-    return null;
+    return winnerName;
+  }
+
+  function StealDecision() {
+    return (
+      <div className="decision" id="stealDecision">
+        <div className="blackout">
+        </div>
+        <div className="decisionMain">
+          <div className="question">
+            Which veggie do you want to steal?
+            </div>
+          <div className="choices">
+            {getStealablePlayers().map((player) =>
+              <div className="stealOpponent">
+                <img className="playersPicMain" id="playerRabbitImg" src={"../rabbits/" + player.rabbitImg + ".png"} alt="rabbit" />
+                <div className="opponentVeg">
+                  {player.paws.map((veg) =>
+                    <div class="choiceDiv">
+                      <img className="stashItem choice" onClick={() => stealSelect(player.num, veg.name)} src={`../vegetables/${veg.vegImg}`} />
+                      <div className="vegPoints choice">
+                        {veg.points}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   function getStealablePlayers() {
@@ -495,7 +538,7 @@ export default function Game() {
   }
 
   function handleBlock() {
-    socket.emit('block', gameState.room, playerName);
+    //todo tell player they don't need to block until steal
   }
 
   function ActionStash(count) {
@@ -528,5 +571,10 @@ export default function Game() {
   function stashSelect(veg) {
     document.getElementById("stashDecision").style.display = "none";
     socket.emit('stash', gameState.room, playerNum, veg);
+  }
+
+  function handleEndGame() {
+    console.log("endGame");
+    document.getElementById("endGame").style.display = "block";
   }
 }

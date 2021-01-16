@@ -157,8 +157,9 @@ io.on('connection', client => {
     addToChat(room, player.name, "move", ` dropped their veggies and ran from the ${catcher}.`);
     if (roomState.strikes === 3) {
       endGame(room);
+    } else {
+      handleEndTurn(room, player.name);
     }
-    handleEndTurn(room, player.name);
   }
 
   function endGame(room) {
