@@ -33,6 +33,9 @@ export default function Game() {
       document.getElementById("gameMain").style.display = "block";
       document.getElementById("intro").style.display = "none";
       document.getElementById("title").classList.add("playingTitle");
+
+      let chatBox = document.getElementById("chatbox");
+      chatBox.scrollTop = chatBox.scrollHeight;
     } else {
       document.getElementById("gameMain").style.display = "none";
       document.getElementById("intro").style.display = "block";

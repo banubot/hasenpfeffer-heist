@@ -28,7 +28,6 @@ On a turn,
 
 ### To Do
 game rooms must be unique
-grey out actions when it not your turn
 chat not left align for long text
 create help menu
 adjust odds of 3 random game events
@@ -37,7 +36,6 @@ veg points show on hover
 chat font doesn't like numbers :(
 why are vegs weirdly stacking
 why is "its your turn" chat the only one not on the left?
-chat always scrolls to bottom
 some kind of shadow on choices
 fix steal/end game menu style
 can't read player name when its over the farm 
@@ -45,3 +43,5 @@ put vegs next to players
 tell player nobody to steal from/ nothing to stash / block
 enter in inputs
 strikes too small
+hover over stash looks like link pointer
+cleanup
