@@ -8,7 +8,7 @@ export default function Game() {
   let rabbitPicName;
   let faveVeg;
   const allVegs = require('../data/vegetables.json');
-  const socket = io('http://localhost:3000');
+  const socket = io('https://floating-bastion-35398.herokuapp.com/');
 
   socket.on('playerNum', handlePlayerNum); //get which player you are
   socket.on('gameState', handleGameState); //state has changed

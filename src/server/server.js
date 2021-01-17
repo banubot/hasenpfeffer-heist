@@ -257,4 +257,4 @@ function Event(player, type, description) {
   this.description = description;
 }
 
-io.listen(3000);
+io.listen(process.env.PORT || 3000);
