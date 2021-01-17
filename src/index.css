@@ -185,6 +185,13 @@ button {
   top: 15vw;
 }
 
+.empty {
+  font-family: "Description";
+  color: gray;
+  font-size: 2.5vw;
+  padding: 2vw;
+}
+
 .decision {
   display: none;
 }

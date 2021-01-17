@@ -32,7 +32,6 @@ grey out actions when it not your turn
 chat not left align for long text
 create help menu
 adjust odds of 3 random game events
-add more rabbit breeds
 limit paws to 2
 veg points show on hover
 chat font doesn't like numbers :(
@@ -40,8 +39,9 @@ why are vegs weirdly stacking
 why is "its your turn" chat the only one not on the left?
 chat always scrolls to bottom
 some kind of shadow on choices
-add some placeholder for empty inventory
 fix steal/end game menu style
 can't read player name when its over the farm 
 put vegs next to players
 tell player nobody to steal from/ nothing to stash / block
+enter in inputs
+strikes too small

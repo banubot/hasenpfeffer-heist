@@ -8,7 +8,8 @@ export default function Game() {
   let rabbitPicName;
   let faveVeg;
   const allVegs = require('../data/vegetables.json');
-  const socket = io('https://floating-bastion-35398.herokuapp.com/');
+  const socket = io('localhost:3000');
+  //io('https://guarded-reaches-28483.herokuapp.com/');
 
   socket.on('playerNum', handlePlayerNum); //get which player you are
   socket.on('gameState', handleGameState); //state has changed
@@ -249,14 +250,18 @@ export default function Game() {
             Burrow
         </b>
           <br />
-          {player.burrow.map((veg) =>
-            <div class="vegDiv">
-              <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
-              <div className="vegPoints">
-                {veg.points}
-              </div>
+          {player.burrow.length === 0 ?
+            <div className="empty">
+              empty
             </div>
-          )}
+            : player.burrow.map((veg) =>
+              <div class="vegDiv">
+                <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
+                <div className="vegPoints">
+                  {veg.points}
+                </div>
+              </div>
+            )}
         </div>
       );
     }
@@ -274,14 +279,18 @@ export default function Game() {
             Paws
         </b>
           <br />
-          {player.paws.map((veg) =>
-            <div class="vegDiv">
-              <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
-              <div className="vegPoints">
-                {veg.points}
-              </div>
+          {player.paws.length === 0 ?
+            <div className="empty">
+              empty
             </div>
-          )}
+            : player.paws.map((veg) =>
+              <div class="vegDiv">
+                <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
+                <div className="vegPoints">
+                  {veg.points}
+                </div>
+              </div>
+            )}
         </div>
       );
     }
@@ -327,10 +336,22 @@ export default function Game() {
     let player = gameState.players[playerNum];
     if (player) {
       for (let action in player.actions) {
-        actions.push(mapAction(action, player.actions[action]));
+        let mapped = mapAction(action, player.actions[action]);
+        console.log(mapped);
+        if (mapped) {
+          actions.push(mapped);
+        }
       }
     }
-    return (actions);
+    if (actions.length > 0) {
+      return (actions);
+    } else {
+      return (
+        <div className="empty">
+          empty
+        </div>
+      );
+    }
   }
 
   function mapAction(action, count) {
@@ -348,7 +369,7 @@ export default function Game() {
         case "End Turn":
           return (<ActionEndTurn />);
         default:
-          return;
+          return null;
       }
     }
   }
