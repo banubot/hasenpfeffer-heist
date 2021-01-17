@@ -183,6 +183,7 @@ button {
   position: absolute;
   left: 7vw;
   top: 15vw;
+  font-size: 3vw;
 }
 
 .empty {
