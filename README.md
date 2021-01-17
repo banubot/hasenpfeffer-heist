@@ -42,6 +42,5 @@ can't read player name when its over the farm
 put vegs next to players
 tell player nobody to steal from/ nothing to stash / block
 enter in inputs
-strikes too small
 hover over stash looks like link pointer
 cleanup
