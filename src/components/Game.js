@@ -15,7 +15,6 @@ export default function Game() {
   socket.on('gameState', handleGameState); //state has changed
   socket.on('endGame', handleEndGame);
 
-  //socket.on('newOpponent', handleNewOpponent); 
   //todo: pull this out so initial state isn't duplicate in client and server
   const [gameState, setGameState] = useState({
     "room": "",
@@ -25,6 +24,7 @@ export default function Game() {
     "chat": [],
     "turn": 1
   });
+
   useEffect(() => {
     document.getElementById("roomSelect").style.display = "none";
     document.getElementById("charSelect").style.display = "none";
@@ -69,16 +69,103 @@ export default function Game() {
         <StashDecision />
         <StealDecision />
         <EndGame />
+        <Help />
       </div>
     );
   }
 
+  function Help() {
+    return (
+      <div>
+        <img alt="question mark" src="../question3.png" onClick={openHelpModal} id="openHelpButton" />
+        <div className="modal" id="helpModal">
+          <div className="blackout">
+          </div>
+          <div className="modalMain" id="helpModalMain">
+            <button id="closeHelpButton" onClick={closeHelpModal}>
+              X
+            </button>
+            <Music />
+            <HowTo />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function Music() {
+    return (
+      <div id="music">
+        <audio controls loop>
+          <source src="" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <div id="credits">
+          Music produced by <a target="_blank" rel="noopener noreferrer" href="https://open.spotify.com/artist/4phchTGE4TabDa2uJp39ql">
+            Haunted Sky
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  function HowTo() {
+    return (
+      <div id="howToDiv">
+        <h2 id="howToTitle">
+          How To Play
+        </h2>
+        <h3 className="howToHeading">
+          Objective
+        </h3>
+        <p className="howToInstruction">
+          Players earn points by collecting vegetables.
+          Vegetables can be dug up from the garden or stolen
+          from another player. If the player is caught digging,
+          a strike occurs. The game ends after three strikes
+          and the player with the most points wins.
+        </p>
+        <h3 className="howToHeading">
+          Taking Turns
+        </h3>
+        <ol>
+          <li>
+            Player starts with actions <b>Dig</b>, <b>End Turn</b>, and whatever actions were collected during previous turns.
+          </li>
+          <li>
+            When a player performs action <b>Dig</b>, they will randomly find a vegetable, action, or strike.
+          </li>
+          <li>
+            Vegetables found are added to paws. If both of two paws are full, the player may choose to drop one of the vegetables they are holding.
+          </li>
+          <li>
+            Player can also perform a `Steal` action to steal a vegetable from another player. If this player has a `Block` action, the `Steal` is unsuccessful.
+          </li>
+          <li>
+            Player can also perform a `Stash` action to move a vegetable from the paws to the burrow.
+          </li>
+          <li>
+            A strike will cause the player to drop the vegetables they are holding and end their turn.
+          </li>
+        </ol>
+      </div>
+    );
+  }
+
+  function openHelpModal() {
+    document.getElementById("helpModal").style.display = "block";
+  }
+
+  function closeHelpModal() {
+    document.getElementById("helpModal").style.display = "none";
+  }
+
   function EndGame() {
     return (
-      <div className="decision" id="endGame">
+      <div className="modal" id="endGame">
         <div className="blackout">
         </div>
-        <div className="decisionMain">
+        <div className="modalMain">
           <div className="question">
             Game Over...{getWinner()} wins!
             </div>
@@ -120,10 +207,10 @@ export default function Game() {
 
   function StealDecision() {
     return (
-      <div className="decision" id="stealDecision">
+      <div className="modal" id="stealDecision">
         <div className="blackout">
         </div>
-        <div className="decisionMain">
+        <div className="modalMain">
           <div className="question">
             Which veggie do you want to steal?
             </div>
@@ -134,7 +221,7 @@ export default function Game() {
                 <div className="opponentVeg">
                   {player.paws.map((veg) =>
                     <div class="choiceDiv">
-                      <img className="stashItem choice" onClick={() => stealSelect(player.num, veg.name)} src={`../vegetables/${veg.vegImg}`} />
+                      <img alt="vegetable" className="stashItem choice" onClick={() => stealSelect(player.num, veg.name)} src={`../vegetables/${veg.vegImg}`} />
                       <div className="vegPoints choice">
                         {veg.points}
                       </div>
@@ -165,17 +252,17 @@ export default function Game() {
     let player = gameState.players[playerNum];
     if (player) {
       return (
-        <div className="decision" id="stashDecision">
+        <div className="modal" id="stashDecision">
           <div className="blackout">
           </div>
-          <div className="decisionMain">
+          <div className="modalMain">
             <div className="question">
               Which veggie do you want to stash?
             </div>
             <div className="choices">
               {player.paws.map((veg) =>
                 <div class="choice">
-                  <img className="stashItem" onClick={() => stashSelect(veg.name)} src={`../vegetables/${veg.vegImg}`} />
+                  <img alt="vegetable" className="stashItem" onClick={() => stashSelect(veg.name)} src={`../vegetables/${veg.vegImg}`} />
                   <div className="vegPoints">
                     {veg.points}
                   </div>
@@ -259,7 +346,7 @@ export default function Game() {
             </div>
             : player.burrow.map((veg) =>
               <div class="vegDiv">
-                <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
+                <img alt="vegetable" className="stashItem" src={`../vegetables/${veg.vegImg}`} />
                 <div className="vegPoints">
                   {veg.points}
                 </div>
@@ -288,7 +375,7 @@ export default function Game() {
             </div>
             : player.paws.map((veg) =>
               <div class="vegDiv">
-                <img className="stashItem" src={`../vegetables/${veg.vegImg}`} />
+                <img alt="vegetable" className="stashItem" src={`../vegetables/${veg.vegImg}`} />
                 <div className="vegPoints">
                   {veg.points}
                 </div>

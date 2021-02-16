@@ -1,3 +1,7 @@
+#credits, .inventoryHeader, .action, button, .question {
+  font-family: "Description";
+}
+
 .startSelect {
   border: 1px solid black;
   background-color: rgba(255, 255, 255, 0.5);
@@ -19,7 +23,6 @@
 }
 
 .inventoryHeader, .action {
-  font-family: "Description";
   font-size: 3.5vw;
 }
 
@@ -29,7 +32,6 @@
 
 button {
   background-color: #DAFF7F;
-  font-family: "Description";
   border: 1px solid black;
   border-radius: 2px;
   font-weight: bold;
@@ -76,21 +78,60 @@ button {
   height: 30vh;
   z-index: 0;
 }
-.decision {
+
+#openHelpButton {
+  width: 3.5vw;
+  height: 3.5vw;
+  position: absolute;
+  left: 85vw;
+  top: 5vw;
+}
+
+#openHelpButton:hover {
+  width: 4vw;
+  height: 4vw;
+  cursor: pointer;
+
+}
+
+.modal {
   position: fixed;
   left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
+  display: none;
+
 }
 
-.decisionMain {
+.modalMain {
   position: relative;
   width: 50vw;
   height: 35vw;
-  top: 30vh;
+  top: 30vw;
 
   background-color: rgba(203, 238, 116, 1);
+}
+
+#helpModalMain {
+overflow-y: scroll;
+width: 70vw;
+height: 60vw;
+top: 23vw;
+}
+
+#closeHelpButton {
+  position: fixed;
+  left: 79vw;
+  top: 25vw;
+  width: 4vw;
+  height: 4vw;
+  font-size: 3vw;
+}
+
+#music {
+  position: relative;
+  top: 5vw;
 }
 
 .choices {
@@ -118,7 +159,6 @@ button {
 
 .question {
   position: relative;
-  font-family: Description;
   font-size: 4vw;
   top: 5vw;
 }
@@ -148,6 +188,31 @@ button {
   left: 2vw;
   top: 2vw;
   margin: 0;
+}
+
+#howToDiv {
+  position: relative;
+  padding: 3vw;
+  top: 3vw;
+}
+
+#howToTitle {
+  font-family: "Header";
+  font-size: 5vw;
+}
+
+.howToInstruction, ol {
+  font-family: "Description";
+text-align: left;
+width: 60vw;
+padding-left: 3vw;
+font-size: 3vw;
+
+}
+
+.howToHeading {
+  font-family: "Description";
+font-size: 3.5vw;
 }
 
 .selectTag {
@@ -190,9 +255,6 @@ button {
   padding: 2vw;
 }
 
-.decision {
-  display: none;
-}
 
 #chat {
   position: absolute;
